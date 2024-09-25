@@ -1,6 +1,6 @@
 # want to store everything in a cache
 grid_test = [0,0,0,0]
-cache = [(grid_test,True)]
+cache = []
 grid = [5,5,5,5]
 
 
@@ -16,11 +16,17 @@ def solver(grid):
     if (grid, True) in cache:
         return cache
         
-    gridcopy = grid.copy()
     for rows in range(len(grid)):
         for col in range(grid[rows]):
+            gridcopy = grid.copy()
             postchomp = gridcopy[:rows] + [min(col, gridcopy[i]) for i in range(rows, len(grid))]
-            print(postchomp)
+            
+            if solver(postchomp)[-1] != (postchomp,False):
+                cache.append((postchomp,True))
+                
+            print(cache)
+                 
+    return cache
         
         
 solver(grid)
