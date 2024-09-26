@@ -1,39 +1,47 @@
-# want to store everything in a cache
-grid_test = [0,0,0,0]
-cache = []
-grid = [5,5,5,5]
+#NEW approach is to remove the chomped of columns then consider the board before and after in the recursive call
 
+#function gives us a clean version of the game
+def cleangrid(grid):
+    grid = tuple(grid)
+    if 0 in grid:
+        grid = grid[:grid.index(0)]
+    return grid
 
-# take a grid input check if it is all 0 (lose), then check other chomps and based on that see if we can get a recursive solution
+def moveoptns(grid):
+    moves = []
+    for rows in range(4):
+        if rows == 3:
+            for i in range(1,grid[3]+1):
+                gridcopy = grid.copy()
+                gridcopy[rows] = grid[rows]-i
+                moves.append(cleangrid(gridcopy))
+        elif rows == 2:
+            for i in range(1,grid[2]+1):
+                gridcopy = grid.copy()
+                gridcopy[rows] = grid[rows]-i
+                gridcopy[rows+1] = gridcopy[rows]
+                moves.append(cleangrid(gridcopy))
+        elif rows == 1:
+            for i in range(1,grid[1]+1):
+                gridcopy = grid.copy()
+                gridcopy[rows] = grid[rows]-i
+                gridcopy[rows+1] = gridcopy[rows]
+                gridcopy[rows+2] = gridcopy[rows]
+                moves.append(cleangrid(gridcopy))
+        
+        elif rows == 0:
+            for i in range(1,grid[0]+1):
+                gridcopy = grid.copy()
+                gridcopy[rows] = grid[rows]-i
+                gridcopy[rows+1] = gridcopy[rows]
+                gridcopy[rows+2] = gridcopy[rows]
+                gridcopy[rows+3] = gridcopy[rows]
+                moves.append(cleangrid(gridcopy))
+    return moves
 
-def solver(grid):
-    grid_tuple = tuple(grid)
-    if grid_tuple == (0,0,0,0):
-        print("DEAD")
-        cache.append((grid ,False))
-        return cache
-    
-    if (grid, True) in cache:
-        return cache
-        
-    for rows in range(len(grid)):
-        for col in range(grid[rows]):
-            gridcopy = grid.copy()
-            postchomp = gridcopy[:rows] + [min(col, gridcopy[i]) for i in range(rows, len(grid))]
-            
-            if solver(postchomp)[-1] != (postchomp,False):
-                cache.append((postchomp,True))
-                
-            print(cache)
-                 
-    return cache
-        
-        
-solver(grid)
+## Logic works just need to add 2 for loop that goes through each of the ifs one by one and then outputs the cleaned grid
 
-## TO DO    SO FAR HAVE A PYGAME SET UP, NEED TO COMPLETE THE SOLVER, CURRENTLY IT CAN CHOMP CORRECTLY WHICH IS GOOD, ADD RECURSIVE ELEMENT NEXT, AND SOLVE BY PICKING TRUE OPTIONS FROM CACHE
-## THEN COMBINE BOTH FILES TOGETHER TO GET A OVERALL OUTCOME. 
-        
+print(moveoptns([5,5,5,5]))
 
 
             
